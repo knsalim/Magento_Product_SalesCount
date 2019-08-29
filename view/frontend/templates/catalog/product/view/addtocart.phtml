@@ -1,0 +1,113 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $buttonTitle = __('Add to Cart'); ?>
+<?php if ($_product->isSaleable()): ?>
+<div class="box-tocart">
+    <div class="fieldset">
+        <?php if ($block->shouldRenderQuantity()): ?>
+        <div class="field qty">
+            <label class="label" for="qty"><span><?= /* @escapeNotVerified */ __('Qty') ?></span></label>
+            <div class="control">
+                <input type="number"
+                       name="qty"
+                       id="qty"
+                       min="0"
+                       value="<?= /* @escapeNotVerified */ $block->getProductDefaultQty() * 1 ?>"
+                       title="<?= /* @escapeNotVerified */ __('Qty') ?>"
+                       class="input-text qty"
+                       data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+                       />
+            </div>
+        </div>
+        <?php endif; ?>
+        <div class="actions">
+            <button type="submit"
+                    title="<?= /* @escapeNotVerified */ $buttonTitle ?>"
+                    class="action primary tocart"
+                    id="product-addtocart-button" disabled>
+                <span><?= /* @escapeNotVerified */ $buttonTitle ?></span>
+            </button>
+            <h1><span class="badge badge-pill badge-success">
+                <?php
+                /** @var TYPE_NAME $productatt */
+
+                /**
+                 * product Attribute
+                 */
+                $sku=$_product->getSku();
+
+                $productatt = $_product->getAttributeText('show_sales_count');
+
+                /**
+                 * Helper Function calling
+                 */
+                $yourHelperData = $this->helper('Leanswift\ProductSales\Helper\Data');
+                /**
+                 * Method getenble value  for sysconfig
+                 */
+                $sysconfigenable=$yourHelperData->getEnable();
+                /**
+                 * Method getdays value for sysconfig
+                 */
+
+                $sysconfigday=$yourHelperData->getDays();
+                /**
+                 * Condition for checking the status of product and system configuration
+                 */
+                 if($sysconfigenable == 1 && $productatt == 'Yes') {
+                     if ($productatt == 'Yes') {
+                         switch ($sysconfigday) {
+                             case "0":
+                                 echo '';
+                                 break;
+                             case "1":
+                                 echo $yourHelperData->getData($sku,$ordershippeddays=1).'  Items sold in 1 Days';
+                                 break;
+                             case "2":
+                                 echo $yourHelperData->getData($sku,$ordershippeddays=7).'  Items sold in 7  Days';
+                                 break;
+                             case "3":
+                                 echo $yourHelperData->getData($sku,$ordershippeddays=30).'  Items sold in 1 Month';
+                                 break;
+                             case "4":
+                                 echo $yourHelperData->getData($sku,$ordershippeddays=90).'  Items sold in 3 Months';
+                                 break;
+                             case "5":
+                                 echo $yourHelperData->getData($sku,$ordershippeddays=180).'  Items sold in 6  Months';
+                                 break;
+                             case "6":
+                                 echo $yourHelperData->getData($sku,$ordershippeddays=360).'  Items sold in 1 Year';
+                                 break;
+                             default:
+                                 echo "";
+                         }
+                     } else if ($productatt == 'No') {
+                         echo "This product is not sold";
+                     }
+                 }
+
+                ?>
+           </span> </h1>
+
+            <?= $block->getChildHtml('', true) ?>
+        </div>
+    </div>
+
+</div>
+<?php endif; ?>
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
+</script>

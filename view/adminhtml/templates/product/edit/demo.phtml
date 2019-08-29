@@ -1,0 +1,153 @@
+
+<?php
+/**
+ * This Block is used for to get current sku value
+ */
+if($currentProduct = $block->getProduct()){
+     $currentProduct->getName();
+     $currentProduct->getSku() . '<br />';
+    }
+$sku= $currentProduct->getSku();
+/**
+ * To get the count of order quantity
+ */
+$yourHelperData = $this->helper('Leanswift\ProductSales\Helper\Data');
+
+?>
+<style>
+    table {
+        width:100%;
+    }
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 15px;
+        text-align: left;
+    }
+    table#t01 tr:nth-child(even) {
+        background-color: #eee;
+    }
+    table#t01 tr:nth-child(odd) {
+        background-color: #fff;
+    }
+    table#t01 th {
+        background-color: black;
+        color: white;
+    }
+
+</style>
+<!--To show the product in table view-->
+<table id="t01">
+    <tr>
+        <th>One Day</th>
+        <th>7 Days</th>
+        <th>1 Month</th>
+        <th>3 Month</th>
+        <th>6 Month</th>
+        <th>1 Year</th>
+    </tr>
+    <tr>
+        <td><?php echo $yourHelperData->getData($sku,$ordershippeddays=1);?></td>
+        <td><?php echo $yourHelperData->getData($sku,$ordershippeddays=7);?></td>
+        <td><?php echo $yourHelperData->getData($sku,$ordershippeddays=30);?></td>
+        <td><?php echo $yourHelperData->getData($sku,$ordershippeddays=90);?></td>
+        <td><?php echo $yourHelperData->getData($sku,$ordershippeddays=180);?></td>
+        <td><?php echo $yourHelperData->getData($sku,$ordershippeddays=360);?></td>
+    </tr>
+    <tr>
+</table>
+<table>
+    <tr>
+        <td><div  id="barchart_material" style="width:500px; height: 500px;"></div></td>
+        <td><div id="curve_chart" style="width:500px; height: 500px;"></div></td>
+        <td><div id="chart_div" style="width:500px; height: 500px;"></div></td>
+    </tr>
+</table>
+
+
+
+<script type="text/javascript">
+    require(['jquery', 'jquery/ui' , 'https://www.gstatic.com/charts/loader.js'], function ($) {
+
+        google.charts.load('current', {'packages':['bar']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['By Days', 'SalesQty'],
+                ['<?php echo '1' ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=1);?>],
+                ['<?php echo 7 ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=7);?>],
+                ['<?php echo 30 ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=30);?>],
+                ['<?php echo 90 ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=90);?>],
+                ['<?php echo 180 ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=180);?>],
+                ['<?php echo 360 ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=360);?>]
+            ]);
+
+            var options = {
+                chart: {
+                    title: 'Sales Qty ',
+                    subtitle: 'Sales By 1 Day,7 Day, 1 Month , 3 Month , 6 Month , 1 Year',
+                },
+                bars: 'horizontal',
+                colors: '#9f595f'// Required for Material Bar Charts.
+            };
+
+            var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+
+            chart.draw(data, google.charts.Bar.convertOptions(options));
+
+        }
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart1);
+
+        function drawChart1() {
+            var data = google.visualization.arrayToDataTable([
+                ['Days', 'Qty Sold'],
+                ['<?php echo '1' ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=1);?>],
+                ['<?php echo 7 ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=7);?>],
+                ['<?php echo 30 ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=30);?>],
+                ['<?php echo 90 ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=90);?>],
+                ['<?php echo 180 ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=180);?>],
+                ['<?php echo 360 ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=360);?>]
+            ]);
+
+            var options = {
+                title: 'Product Sales Performance',
+                curveType: 'function',
+                legend: { position: 'bottom' }
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+            google.visualization.events.addListener(chart, 'ready', function () {
+                curve_chart.innerHTML = '<img src="' + chart.getImageURI() + '">';
+                console.log(curve_chart.innerHTML);
+            });
+            chart.draw(data, options);
+        }
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart2);
+
+        function drawChart2() {
+            var data = google.visualization.arrayToDataTable([
+                ['Year', 'Sales'],
+                ['<?php echo '1 Day' ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=1);?>],
+                ['<?php echo 'Last 7 Days' ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=7);?>],
+                ['<?php echo 'Last 1 Month' ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=30);?>],
+                ['<?php echo 'Last 3 Month' ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=90);?>],
+                ['<?php echo 'Last 6 Month' ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=180);?>],
+                ['<?php echo 'Last 1 Year' ;?>', <?php echo $yourHelperData->getData($sku,$ordershippeddays=360);?>]
+            ]);
+
+            var options = {
+                title: 'product Performance',
+                hAxis: {title: 'Year',  titleTextStyle: {color: '#333'}},
+                vAxis: {minValue: 0}
+            };
+
+            var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    });
+</script>

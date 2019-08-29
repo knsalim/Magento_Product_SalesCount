@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+       
+    <menu>
+           
+        <add id="Leanswift_ProductSales::menu" title="Custom Menu" module="Leanswift_ProductSales" sortOrder="10"
+             resource="Leanswift_ProductSales::create"/>
+           
+        <add id="Leanswift_ProductSales::menu_item" title="Manage Items" module="Leanswift_ProductSales" sortOrder="10"
+             parent="Leanswift_ProductSales::menu" action="productsales/Index/index"
+             resource="Leanswift_ProductSales::menu_item"/>
+           
+        <add id="Leanswift_ProductSales::menu_configuration" title="Setting" module="Leanswift_ProductSales"
+             sortOrder="20" parent="Leanswift_ProductSales::menu" action="productsales/Test"
+             resource="Leanswift_ProductSales::menu_configuration"/>
+           
+    </menu>
+</config>
