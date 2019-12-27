@@ -1,4 +1,0 @@
-hello git this is my first commit.
-This my second Commit
-This is my third commit.
-Summa oru commit panni vappom
